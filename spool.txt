@@ -1,0 +1,4 @@
+Presupuesto.xlsx, 10
+CartaRegistraduria.doc, 8
+CartaPromigas.doc, 12
+Recibo.xlsx, 20
