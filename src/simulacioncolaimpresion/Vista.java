@@ -68,7 +68,9 @@ public class Vista extends javax.swing.JFrame {
             }
         });
         pnlFrame.add(btnSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 240, -1, -1));
-        pnlFrame.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 30, 100, 110));
+
+        lblImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/print.png"))); // NOI18N
+        pnlFrame.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 40, 130, 140));
 
         txtDatos.setColumns(20);
         txtDatos.setRows(5);
