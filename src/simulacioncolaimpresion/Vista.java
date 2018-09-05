@@ -8,6 +8,7 @@ package simulacioncolaimpresion;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -22,6 +23,8 @@ public class Vista extends javax.swing.JFrame {
         initComponents();
     }
 
+    Cola<Item> Datos = new Cola<>();
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,8 +39,8 @@ public class Vista extends javax.swing.JFrame {
         btnIniciarSimulacion = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         lblImagen = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        txtDatos = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        listDatos = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -58,6 +61,11 @@ public class Vista extends javax.swing.JFrame {
 
         btnIniciarSimulacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/round-play-button.png"))); // NOI18N
         btnIniciarSimulacion.setText("Iniciar Simulación");
+        btnIniciarSimulacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIniciarSimulacionActionPerformed(evt);
+            }
+        });
         pnlFrame.add(btnIniciarSimulacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 240, -1, -1));
 
         btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/exit.png"))); // NOI18N
@@ -72,11 +80,9 @@ public class Vista extends javax.swing.JFrame {
         lblImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/print.png"))); // NOI18N
         pnlFrame.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 40, 130, 140));
 
-        txtDatos.setColumns(20);
-        txtDatos.setRows(5);
-        jScrollPane1.setViewportView(txtDatos);
+        jScrollPane2.setViewportView(listDatos);
 
-        pnlFrame.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 150, 190));
+        pnlFrame.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 150, 200));
 
         getContentPane().add(pnlFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 440, 290));
 
@@ -85,9 +91,12 @@ public class Vista extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCargarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarDatosActionPerformed
+        System.out.println("gola");
         try {
             // TODO add your handling code here:
-            Metodos.cargarDatos("spool.txt");
+            Datos = Metodos.cargarDatos("spool.txt");
+            System.out.println("gola");
+            Metodos.subirLista(Datos,listDatos);
         } catch (IOException ex) {
             Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -97,6 +106,22 @@ public class Vista extends javax.swing.JFrame {
         // TODO add your handling code here:
         System.exit(0);
     }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void btnIniciarSimulacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSimulacionActionPerformed
+        // TODO add your handling code here:
+        int size = Datos.getSize();
+        for (int i = 0; i < size; i++) {
+            try {
+                ventanaProceso dialog = new ventanaProceso(this, true,  Datos.peek().getValor());
+                dialog.setVisible(true);
+                Datos.dequeue();
+                DefaultListModel modelo = (DefaultListModel)listDatos.getModel();
+                modelo.remove(0);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnIniciarSimulacionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -137,9 +162,9 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JButton btnCargarDatos;
     private javax.swing.JButton btnIniciarSimulacion;
     private javax.swing.JButton btnSalir;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblImagen;
+    private javax.swing.JList<String> listDatos;
     private javax.swing.JPanel pnlFrame;
-    private javax.swing.JTextArea txtDatos;
     // End of variables declaration//GEN-END:variables
 }

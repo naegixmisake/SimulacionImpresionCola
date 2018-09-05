@@ -5,6 +5,10 @@
  */
 package simulacioncolaimpresion;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.Timer;
+
 /**
  *
  * @author cgrondon
@@ -13,10 +17,20 @@ public class ventanaProceso extends javax.swing.JDialog {
 
     /**
      * Creates new form ventanaProceso
+     * @param parent
+     * @param modal
+     * @param dato
+     * @throws java.lang.InterruptedException
      */
-    public ventanaProceso(java.awt.Frame parent, boolean modal) {
+    public ventanaProceso(java.awt.Frame parent, boolean modal, Item dato) throws InterruptedException {
         super(parent, modal);
         initComponents();
+        lblDescripcion.setText(dato.getArchivo());
+        int tiempo = Integer.parseInt(dato.getTiempo().trim());
+        Timer t = new Timer((tiempo*1000), (ae) -> {
+            this.dispose();
+        }); 
+        t.start();
     }
 
     /**
@@ -51,6 +65,7 @@ public class ventanaProceso extends javax.swing.JDialog {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 330, 210));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -81,17 +96,20 @@ public class ventanaProceso extends javax.swing.JDialog {
         //</editor-fold>
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ventanaProceso dialog = new ventanaProceso(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+        java.awt.EventQueue.invokeLater(() -> {
+            ventanaProceso dialog = null;
+            try {
+                dialog = new ventanaProceso(new javax.swing.JFrame(), true, new Item("", "", ""));
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ventanaProceso.class.getName()).log(Level.SEVERE, null, ex);
             }
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            dialog.setVisible(true);
         });
     }
 
